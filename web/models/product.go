@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	dab "web/db"
@@ -21,13 +22,32 @@ type Product struct {
 	Quantidade int
 }
 
-func SelectAllProducts() []*Product {
+func init() {
+	_collection = dab.GetCollectionToDataBase("product")
+}
 
-	_collection := dab.GetCollectionToDataBase("product")
+// InsertProducts is
+func InsertProducts(products []*Product) {
+
+	collects := make([]interface{}, len(products))
+	for i, s := range products {
+		collects[i] = s
+	}
+
+	insertManyResult, err := _collection.InsertMany(context.TODO(), collects)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+}
+
+// SelectAllProducts is
+func SelectAllProducts() []*Product {
 
 	var results []*Product
 	findOptions := options.Find()
-	findOptions.SetLimit(10)
 
 	cur, err := _collection.Find(context.TODO(), bson.D{{}}, findOptions)
 	if err != nil {
