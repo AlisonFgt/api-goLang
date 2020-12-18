@@ -1,10 +1,10 @@
-package models
+package product
 
 import (
 	"context"
 	"log"
 
-	"./web/db"
+	dab "web/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,9 +21,9 @@ type Product struct {
 	Quantidade int
 }
 
-func selectAllProducts() []*Product {
+func SelectAllProducts() []*Product {
 
-	_collection := db.GetCollectionToCollection("product")
+	_collection := dab.GetCollectionToDataBase("product")
 
 	var results []*Product
 	findOptions := options.Find()
