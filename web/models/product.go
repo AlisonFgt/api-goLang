@@ -1,11 +1,11 @@
-package product
+package models
 
 import (
 	"context"
 	"fmt"
 	"log"
 
-	dab "web/db"
+	mongodb "web/db"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -23,7 +23,7 @@ type Product struct {
 }
 
 func init() {
-	_collection = dab.GetCollectionToDataBase("product")
+	_collection = mongodb.GetCollectionToDataBase("product")
 }
 
 // InsertProducts is
@@ -41,6 +41,16 @@ func InsertProducts(products []*Product) {
 	}
 
 	fmt.Println("Inserted multiple documents: ", insertManyResult.InsertedIDs)
+}
+
+// InsertProduct is
+func InsertProduct(product Product) {
+
+	insertResult, err := _collection.InsertOne(context.TODO(), product)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
 }
 
 // SelectAllProducts is
@@ -65,4 +75,26 @@ func SelectAllProducts() []*Product {
 	}
 
 	return results
+}
+
+// InitializedDataBase is
+func InitializedDataBase() {
+	products := []*Product{
+		{Nome: "Camiseta", Descricao: "Azul, bem bonita", Preco: 39, Quantidade: 5},
+		{Nome: "Tenis", Descricao: "Confortável", Preco: 89, Quantidade: 3},
+		{Nome: "Fone", Descricao: "Muito bom", Preco: 59, Quantidade: 2},
+		{Nome: "Produto novo", Descricao: "Muito legal", Preco: 1.99, Quantidade: 1},
+	}
+
+	existsProduct := SelectAllProducts()
+
+	if existsProduct == nil && len(existsProduct) == 0 {
+		InsertProducts(products)
+	}
+}
+
+// CreateNewProduct is
+func CreateNewProduct(nome, descricao string, preco float64, quantidade int) {
+	value := Product{Nome: nome, Descricao: descricao, Preco: preco, Quantidade: quantidade}
+	InsertProduct(value)
 }

@@ -1,4 +1,4 @@
-package db
+package mongodb
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// Trainer is
 type Trainer struct {
 	Name string
 	Age  int

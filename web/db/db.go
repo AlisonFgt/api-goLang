@@ -1,4 +1,4 @@
-package db
+package mongodb
 
 import (
 	"context"
@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// GetCollectionToDataBase is
 func GetCollectionToDataBase(collect string) *mongo.Collection {
 
 	// Set client options
