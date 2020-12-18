@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	p "web/models"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -24,14 +25,12 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-
-	newProducts := selectAllProducts()
-
-	temp.ExecuteTemplate(w, "Index", newProducts)
+	products := p.SelectAllProducts()
+	temp.ExecuteTemplate(w, "Index", products)
 }
 
 func initializedDataBase() {
-	products := []*Product{
+	products := []*p.Product{
 		{"Camiseta", "Azul, bem bonita", 39, 5},
 		{"Tenis", "Confortável", 89, 3},
 		{"Fone", "Muito bom", 59, 2},
@@ -41,9 +40,9 @@ func initializedDataBase() {
 	insertProducts(products)
 }
 
-func insertProducts(products []*Product) {
+func insertProducts(products []*p.Product) {
 
-	existsProduct := selectAllProducts()
+	existsProduct := p.SelectAllProducts()
 
 	if existsProduct == nil && len(existsProduct) == 0 {
 		collects := make([]interface{}, len(products))
